@@ -110,9 +110,124 @@
 * IPython notebook
 *
 */
-/* CSS font colors for translated ANSI colors. */
+/* CSS font colors for translated ANSI escape sequences */
+/* The color values are a mix of
+   http://www.xcolors.net/dl/baskerville-ivorylight and
+   http://www.xcolors.net/dl/euphrasia */
+.ansi-black-fg {
+  color: #3E424D;
+}
+.ansi-black-bg {
+  background-color: #3E424D;
+}
+.ansi-black-intense-fg {
+  color: #282C36;
+}
+.ansi-black-intense-bg {
+  background-color: #282C36;
+}
+.ansi-red-fg {
+  color: #E75C58;
+}
+.ansi-red-bg {
+  background-color: #E75C58;
+}
+.ansi-red-intense-fg {
+  color: #B22B31;
+}
+.ansi-red-intense-bg {
+  background-color: #B22B31;
+}
+.ansi-green-fg {
+  color: #00A250;
+}
+.ansi-green-bg {
+  background-color: #00A250;
+}
+.ansi-green-intense-fg {
+  color: #007427;
+}
+.ansi-green-intense-bg {
+  background-color: #007427;
+}
+.ansi-yellow-fg {
+  color: #DDB62B;
+}
+.ansi-yellow-bg {
+  background-color: #DDB62B;
+}
+.ansi-yellow-intense-fg {
+  color: #B27D12;
+}
+.ansi-yellow-intense-bg {
+  background-color: #B27D12;
+}
+.ansi-blue-fg {
+  color: #208FFB;
+}
+.ansi-blue-bg {
+  background-color: #208FFB;
+}
+.ansi-blue-intense-fg {
+  color: #0065CA;
+}
+.ansi-blue-intense-bg {
+  background-color: #0065CA;
+}
+.ansi-magenta-fg {
+  color: #D160C4;
+}
+.ansi-magenta-bg {
+  background-color: #D160C4;
+}
+.ansi-magenta-intense-fg {
+  color: #A03196;
+}
+.ansi-magenta-intense-bg {
+  background-color: #A03196;
+}
+.ansi-cyan-fg {
+  color: #60C6C8;
+}
+.ansi-cyan-bg {
+  background-color: #60C6C8;
+}
+.ansi-cyan-intense-fg {
+  color: #258F8F;
+}
+.ansi-cyan-intense-bg {
+  background-color: #258F8F;
+}
+.ansi-white-fg {
+  color: #C5C1B4;
+}
+.ansi-white-bg {
+  background-color: #C5C1B4;
+}
+.ansi-white-intense-fg {
+  color: #A1A6B2;
+}
+.ansi-white-intense-bg {
+  background-color: #A1A6B2;
+}
+.ansi-default-inverse-fg {
+  color: #FFFFFF;
+}
+.ansi-default-inverse-bg {
+  background-color: #000000;
+}
+.ansi-bold {
+  font-weight: bold;
+}
+.ansi-underline {
+  text-decoration: underline;
+}
+/* The following styles are deprecated an will be removed in a future version */
 .ansibold {
   font-weight: bold;
+}
+.ansi-inverse {
+  outline: 0.5px dotted;
 }
 /* use dark versions for foreground, to improve visibility */
 .ansiblack {
@@ -191,12 +306,20 @@ div.cell {
   /* This acts as a spacer between cells, that is outside the border */
   margin: 0px;
   outline: none;
-  border-left-width: 1px;
-  padding-left: 5px;
-  background: linear-gradient(to right, transparent -40px, transparent 1px, transparent 1px, transparent 100%);
+  position: relative;
+  overflow: visible;
+}
+div.cell:before {
+  position: absolute;
+  display: block;
+  top: -1px;
+  left: -1px;
+  width: 5px;
+  height: calc(100% +  2px);
+  content: '';
+  background: transparent;
 }
 div.cell.jupyter-soft-selected {
-  border-left-color: #90CAF9;
   border-left-color: #E3F2FD;
   border-left-width: 1px;
   padding-left: 5px;
@@ -209,27 +332,39 @@ div.cell.jupyter-soft-selected {
     border-color: transparent;
   }
 }
-div.cell.selected {
+div.cell.selected,
+div.cell.selected.jupyter-soft-selected {
   border-color: #ababab;
-  border-left-width: 0px;
-  padding-left: 6px;
-  background: linear-gradient(to right, #42A5F5 -40px, #42A5F5 5px, transparent 5px, transparent 100%);
+}
+div.cell.selected:before,
+div.cell.selected.jupyter-soft-selected:before {
+  position: absolute;
+  display: block;
+  top: -1px;
+  left: -1px;
+  width: 5px;
+  height: calc(100% +  2px);
+  content: '';
+  background: #42A5F5;
 }
 @media print {
-  div.cell.selected {
+  div.cell.selected,
+  div.cell.selected.jupyter-soft-selected {
     border-color: transparent;
   }
 }
-div.cell.selected.jupyter-soft-selected {
-  border-left-width: 0;
-  padding-left: 6px;
-  background: linear-gradient(to right, #42A5F5 -40px, #42A5F5 7px, #E3F2FD 7px, #E3F2FD 100%);
-}
 .edit_mode div.cell.selected {
   border-color: #66BB6A;
-  border-left-width: 0px;
-  padding-left: 6px;
-  background: linear-gradient(to right, #66BB6A -40px, #66BB6A 5px, transparent 5px, transparent 100%);
+}
+.edit_mode div.cell.selected:before {
+  position: absolute;
+  display: block;
+  top: -1px;
+  left: -1px;
+  width: 5px;
+  height: calc(100% +  2px);
+  content: '';
+  background: #66BB6A;
 }
 @media print {
   .edit_mode div.cell.selected {
@@ -425,7 +560,9 @@ div.input_area > div.highlight > pre {
 .CodeMirror-lines {
   /* In CM2, this used to be 0.4em, but in CM3 it went to 4px. We need the em value because */
   /* we have set a different line-height and want this to scale with that. */
-  padding: 0.4em;
+  /* Note that this should set vertical padding only, since CodeMirror assumes
+       that horizontal padding will be set on CodeMirror pre */
+  padding: 0.4em 0;
 }
 .CodeMirror-linenumber {
   padding: 0 8px 0 4px;
@@ -435,11 +572,24 @@ div.input_area > div.highlight > pre {
   border-top-left-radius: 2px;
 }
 .CodeMirror pre {
-  /* In CM3 this went to 4px from 0 in CM2. We need the 0 value because of how we size */
-  /* .CodeMirror-lines */
-  padding: 0;
+  /* In CM3 this went to 4px from 0 in CM2. This sets horizontal padding only,
+    use .CodeMirror-lines for vertical */
+  padding: 0 0.4em;
   border: 0;
   border-radius: 0;
+}
+.CodeMirror-cursor {
+  border-left: 1.4px solid black;
+}
+@media screen and (min-width: 2138px) and (max-width: 4319px) {
+  .CodeMirror-cursor {
+    border-left: 2px solid black;
+  }
+}
+@media screen and (min-width: 4320px) {
+  .CodeMirror-cursor {
+    border-left: 4px solid black;
+  }
 }
 /*
 
@@ -687,6 +837,9 @@ div.output_area img.unconfined,
 div.output_area svg.unconfined {
   max-width: none;
 }
+div.output_area .mglyph > img {
+  max-width: none;
+}
 /* This is needed to protect the pre formating from global settings such
    as that of bootstrap */
 .output {
@@ -725,7 +878,7 @@ div.output_area svg.unconfined {
 }
 div.output_area pre {
   margin: 0;
-  padding: 0;
+  padding: 1px 0 1px 0;
   border: 0;
   vertical-align: baseline;
   color: black;
@@ -847,6 +1000,10 @@ div.output_unrecognized a:hover {
 .rendered_html h6:first-child {
   margin-top: 1em;
 }
+.rendered_html ul:not(.list-inline),
+.rendered_html ol:not(.list-inline) {
+  padding-left: 2em;
+}
 
 
 
@@ -863,16 +1020,24 @@ div.output_unrecognized a:hover {
 }
 
 
+
+
+
 .rendered_html pre,
+
 
 
 
 .rendered_html tr,
 .rendered_html th,
 
-.rendered_html td,
 
-
+.rendered_html tbody tr:nth-child(odd) {
+  background: #f5f5f5;
+}
+.rendered_html tbody tr:hover {
+  background: rgba(66, 165, 245, 0.2);
+}
 .rendered_html * + table {
   margin-top: 1em;
 }
@@ -888,6 +1053,11 @@ div.output_unrecognized a:hover {
 
 .rendered_html img.unconfined,
 
+
+.rendered_html * + .alert {
+  margin-top: 1em;
+}
+[dir="rtl"] 
 div.text_cell {
   /* Old browsers */
   display: -webkit-box;
@@ -938,8 +1108,15 @@ h6:hover .anchor-link {
   display: none;
 }
 .text_cell.rendered 
+.text_cell.rendered .rendered_html tr,
+.text_cell.rendered .rendered_html th,
+.text_cell.rendered 
 .text_cell.unrendered .text_cell_render {
   display: none;
+}
+.text_cell .dropzone .input_area {
+  border: 2px dashed #bababa;
+  margin: -1px;
 }
 .cm-header-1,
 .cm-header-2,
@@ -1078,8 +1255,7 @@ h6:hover .anchor-link {
 .ansi-bold { font-weight: bold; }
 </style>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h1><img src="https://github.com/Harvard-IACS/2018-CS109A/blob/master/content/styles/iacs.png?raw=true" style="float: left; padding-right: 10px; width: 45px"> CS109A Introduction to Data Science</h1>
 <h2 id="Lab-5:--Exploratory-Data-Analysis,-seaborn,-more-Plotting">Lab 5:  Exploratory Data Analysis, <code>seaborn</code>, more Plotting<a class="anchor-link" href="#Lab-5:--Exploratory-Data-Analysis,-seaborn,-more-Plotting">¶</a></h2><p><strong>Harvard University</strong><br>
@@ -1220,10 +1396,10 @@ header {
 <div class="output">
 <div class="output_area">
 <div class="prompt"></div>
-<div id="e6b92290-71e2-46fe-a20d-dce751b84d74"></div>
+<div id="0f4edc28-c86e-442f-a406-5c65e99bf8eb"></div>
 <div class="output_subarea output_javascript ">
 <script type="text/javascript">
-var element = $('#e6b92290-71e2-46fe-a20d-dce751b84d74');
+var element = $('#0f4edc28-c86e-442f-a406-5c65e99bf8eb');
 IPython.OutputArea.auto_scroll_threshold = 9999;
 
 </script>
@@ -1233,8 +1409,7 @@ IPython.OutputArea.auto_scroll_threshold = 9999;
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="Learning-Goals">Learning Goals<a class="anchor-link" href="#Learning-Goals">¶</a></h2><p>By the end of this lab, you should be able to:</p>
 <ul>
@@ -1246,8 +1421,7 @@ IPython.OutputArea.auto_scroll_threshold = 9999;
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="Table-of-Contents">Table of Contents<a class="anchor-link" href="#Table-of-Contents">¶</a></h2><ul>
 <li><p><a href="#inspire">1 - Visualization Inspiration</a></p>
@@ -1263,8 +1437,7 @@ IPython.OutputArea.auto_scroll_threshold = 9999;
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><a class="anchor" id="inspire"></a></p>
 <h2 id="1---Visualization-Inspiration">1 - Visualization Inspiration<a class="anchor-link" href="#1---Visualization-Inspiration">¶</a></h2><p><img alt="title" src="../images/WGOITG.jpg"></p>
@@ -1277,8 +1450,7 @@ IPython.OutputArea.auto_scroll_threshold = 9999;
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><a class="anchor" id="seaborn"></a></p>
 <h2 id="2---Implementing-Various-Types-of-Plots-using-matplotlib--and-seaborn.">2 - Implementing Various Types of Plots using <code>matplotlib</code>  and <code>seaborn</code>.<a class="anchor-link" href="#2---Implementing-Various-Types-of-Plots-using-matplotlib--and-seaborn.">¶</a></h2><p>Before you start coding your visualization, you need to decide what <strong>type</strong> of vizualization to use. A box plot, a histogram, a scatter plot, or something else? That will depend on the purpose of the plot (is it for performing an inspection on your data (EDA, or for showing your results/conclusions to people) and the number variables that you want to plot.</p>
@@ -1306,8 +1478,7 @@ IPython.OutputArea.auto_scroll_threshold = 9999;
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h3 id="The-Titanic-dataset">The Titanic dataset<a class="anchor-link" href="#The-Titanic-dataset">¶</a></h3><p>The <code>titanic.csv</code> file contains data for 887 passengers on the Titanic. Each row represents one person. The columns describe different attributes about the person including whether they survived, their age, their on-board class, their sex, and the fare they paid.</p>
 </div>
@@ -1377,8 +1548,7 @@ memory usage: 80.6+ KB
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <div class="exercise"> <b> Exercise:  Drop the following features:</b></div><p>'embarked', 'who', 'adult_male', 'embark_town', 'alive', 'alone'</p>
 </div>
@@ -1574,8 +1744,7 @@ memory usage: 80.6+ KB
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <div class="exercise"> <b> Exercise:  Find for how many passengeres we do not have their deck information.</b></div>
 </div>
@@ -1605,8 +1774,7 @@ memory usage: 80.6+ KB
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h3 id="Histograms">Histograms<a class="anchor-link" href="#Histograms">¶</a></h3><h4 id="Plotting-one-variable's-distribution-(categorical-and-continous)">Plotting one variable's distribution (categorical and continous)<a class="anchor-link" href="#Plotting-one-variable's-distribution-(categorical-and-continous)">¶</a></h4><p>The most convenient way to take a quick look at a univariate distribution in <code>seaborn</code> is the <code>distplot()</code> function. By default, this will draw a histogram and fit a kernel density estimate (KDE).</p>
 <p>A histogram displays a quantitative (numerical) distribution by showing the number (or percentage) of the data values that fall in specified intervals. The intervals are on the x-axis and the number of values falling in each interval, shown as either a number or percentage, are represented by bars drawn above the corresponding intervals.</p>
@@ -1671,8 +1839,7 @@ memory usage: 80.6+ KB
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <div class="exercise"> <b> Exercise (pandas trick): Count all the infants on board (age less than 3) and all the children ages 3-10.</b></div>
 </div>
@@ -1704,8 +1871,7 @@ memory usage: 80.6+ KB
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><strong>Pandas trick:</strong> We want to creat virtual "bins" for readability and replace ranges of values with categories.</p>
 <p>We will do this in an ad hoc way, <strong>it can be done better</strong>. For example in the previous plot we could set:</p>
@@ -1756,8 +1922,7 @@ memory usage: 80.6+ KB
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h4 id="Kernel-Density-Estimation">Kernel Density Estimation<a class="anchor-link" href="#Kernel-Density-Estimation">¶</a></h4><p>The kernel density estimate can be a useful tool for plotting the shape of a distribution. The <strong>bandwidth (bw)</strong> parameter of the KDE controls how tightly the estimation is fit to the data, much like the bin size in a histogram. It corresponds to the width of the kernels we plotted above. The default behavior tries to guess a good value using a common reference rule, but it may be helpful to try larger or smaller values.</p>
 </div>
@@ -1787,8 +1952,7 @@ memory usage: 80.6+ KB
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <div class="exercise"> <b> Exercise:  Plot the distribution of fare paid by passengers </b></div>
 </div>
@@ -1818,8 +1982,7 @@ memory usage: 80.6+ KB
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h4 id="You-can-mix-elements-of-matplotlib-such-as-Axes-with-seaborn-elements-for-a-best-use-of-both-worlds.">You can mix elements of <code>matplotlib</code> such as Axes with <code>seaborn</code> elements for a best use of both worlds.<a class="anchor-link" href="#You-can-mix-elements-of-matplotlib-such-as-Axes-with-seaborn-elements-for-a-best-use-of-both-worlds.">¶</a></h4>
 </div>
@@ -1870,8 +2033,7 @@ memory usage: 80.6+ KB
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h4 id="Introduding-the-heart-disease-dataset.">Introduding the heart disease dataset.<a class="anchor-link" href="#Introduding-the-heart-disease-dataset.">¶</a></h4><p>More on this in the in-class exercise at the end of the notebook.</p>
 </div>
@@ -2025,8 +2187,7 @@ memory usage: 80.6+ KB
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h3 id="Boxplots">Boxplots<a class="anchor-link" href="#Boxplots">¶</a></h3><h4 id="One-variable.">One variable.<a class="anchor-link" href="#One-variable.">¶</a></h4>
 </div>
@@ -2060,16 +2221,14 @@ memory usage: 80.6+ KB
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h4 id="Two-variables">Two variables<a class="anchor-link" href="#Two-variables">¶</a></h4>
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <div class="exercise"> <b> Exercise:  Did more young people or older ones get first class tickets on the Titanic?</b></div>
 </div>
@@ -2129,8 +2288,7 @@ memory usage: 80.6+ KB
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h3 id="Scatterplots">Scatterplots<a class="anchor-link" href="#Scatterplots">¶</a></h3><h4 id="Plotting-the-distribution-of-two-variables">Plotting the distribution of two variables<a class="anchor-link" href="#Plotting-the-distribution-of-two-variables">¶</a></h4><p>Also called a bivariate distribution where each observation is shown with  a point with x and y values. You can draw a scatterplot with the <code>matplotlib plt.scatter</code> function, or the <code>seaborn jointplot()</code> function:</p>
 </div>
@@ -2188,8 +2346,7 @@ memory usage: 80.6+ KB
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>You may control the <code>seaborn</code> <a href="https://seaborn.pydata.org/tutorial/aesthetics.html">Figure aesthetics</a>.</p>
 </div>
@@ -2224,8 +2381,7 @@ memory usage: 80.6+ KB
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h4 id="Plotting-the-distribution-of-three-variables">Plotting the distribution of three variables<a class="anchor-link" href="#Plotting-the-distribution-of-three-variables">¶</a></h4>
 </div>
@@ -2255,16 +2411,14 @@ memory usage: 80.6+ KB
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h4 id="Plotting-the-distribution-of-four-variables-(going-too-far?)">Plotting the distribution of four variables (going too far?)<a class="anchor-link" href="#Plotting-the-distribution-of-four-variables-(going-too-far?)">¶</a></h4>
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <div class="exercise"> <b> Exercise:  Plot the distribution of fare paid by passengers according to age, survival and sex. </b></div><p>Use <code>size=</code> for the fourth variable</p>
 </div>
@@ -2295,8 +2449,7 @@ memory usage: 80.6+ KB
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h3 id="Pairplots">Pairplots<a class="anchor-link" href="#Pairplots">¶</a></h3>
 </div>
@@ -2381,8 +2534,7 @@ memory usage: 80.6+ KB
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h3 id="Plotting-Categorical-Variables">Plotting Categorical Variables<a class="anchor-link" href="#Plotting-Categorical-Variables">¶</a></h3>
 </div>
@@ -2507,8 +2659,7 @@ memory usage: 80.6+ KB
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h3 id="Introduction-to-pandas-plotting.">Introduction to <code>pandas</code> plotting.<a class="anchor-link" href="#Introduction-to-pandas-plotting.">¶</a></h3><p>There is plotting functionality built in <code>pandas</code>. Look for it in the <code>pandas</code> "encyclopedia", a mere 2883-page pdf from the creator Wes McKinney: <a href="https://pandas.pydata.org/pandas-docs/stable/pandas.pdf">pandas documentation (pdf)</a></p>
 <p><strong>Example:</strong> The <code>value_counts()</code> Series method and top-level function computes a histogram of a 1D array of values. It can
@@ -2518,8 +2669,7 @@ also be used as a function on regular arrays.</p>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h3 id="Line-Graph">Line Graph<a class="anchor-link" href="#Line-Graph">¶</a></h3><h4 id="Good-for-time-dependency-or-when-a-variable-evolves">Good for time dependency or when a variable evolves<a class="anchor-link" href="#Good-for-time-dependency-or-when-a-variable-evolves">¶</a></h4>
 </div>
@@ -2760,8 +2910,7 @@ also be used as a function on regular arrays.</p>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>Plotting methods allow for a handful of plot styles other than the default line plot. These methods can be provided as the kind keyword argument to plot(), and include:</p>
 <ul>
@@ -2779,8 +2928,7 @@ also be used as a function on regular arrays.</p>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h3 id="Bar-Plots">Bar Plots<a class="anchor-link" href="#Bar-Plots">¶</a></h3>
 </div>
@@ -2974,8 +3122,7 @@ also be used as a function on regular arrays.</p>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h3 id="Histograms">Histograms<a class="anchor-link" href="#Histograms">¶</a></h3>
 </div>
@@ -3014,8 +3161,7 @@ also be used as a function on regular arrays.</p>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h3 id="Boxplots">Boxplots<a class="anchor-link" href="#Boxplots">¶</a></h3>
 </div>
@@ -3048,8 +3194,7 @@ also be used as a function on regular arrays.</p>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h3 id="Area-plots">Area plots<a class="anchor-link" href="#Area-plots">¶</a></h3><p>You can create area plots with <code>Series.plot.area()</code> and <code>DataFrame.plot.area()</code>. Area plots are stacked
 by default. To produce stacked area plot, each column must be either all positive or all negative values.</p>
@@ -3102,8 +3247,7 @@ by default. To produce stacked area plot, each column must be either all positiv
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h3 id="Scatterplot">Scatterplot<a class="anchor-link" href="#Scatterplot">¶</a></h3><p>Scatter plot can be drawn by using the DataFrame.plot.scatter() method. Scatter plot requires numeric
 columns for the x and y axes. These can be specified by the x and y keywords.</p>
@@ -3134,8 +3278,7 @@ columns for the x and y axes. These can be specified by the x and y keywords.</p
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h3 id="pandas-Tricks"><code>pandas</code> Tricks<a class="anchor-link" href="#pandas-Tricks">¶</a></h3><p>The copy() method on pandas objects copies the underlying data (though not the axis indexes, since they are immutable)
 and returns a new object. Note that it is seldom necessary to copy objects. For example, there are only a
@@ -3151,8 +3294,7 @@ leaving the original object untouched. If the data is modified, it is because yo
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><a class="anchor" id="#exercise"></a></p>
 <h2 id="4---Group-Exercise:-1/2-hour-in-the-Life-of-a-Cardiologist">4 - Group Exercise: 1/2 hour in the Life of a Cardiologist<a class="anchor-link" href="#4---Group-Exercise:-1/2-hour-in-the-Life-of-a-Cardiologist">¶</a></h2><p>Try each exercise on your own and then discuss with your peers sitting at your table. Feel free to engage the TFs and instructors as well.</p>
@@ -3329,8 +3471,7 @@ What is the actual number of feature variables after converting categorical vari
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h3 id="Answer-the-following-question-using-plots">Answer the following question using plots<a class="anchor-link" href="#Answer-the-following-question-using-plots">¶</a></h3><ol>
 <li>At what ages do people seek cardiological exams? </li>
@@ -3343,8 +3484,7 @@ What is the actual number of feature variables after converting categorical vari
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><strong>Pandas trick: <code>.replace</code></strong> The response variable (num) is categorical with 5 values, but we don't have enough data to predict all the categories. <br> Therefore we'll replace <code>num</code> with <code>hd</code> (heart disease): <strong>categorical, 2 values {0: no, 1: yes}</strong>. <br>
 Use the code below (take a minute to understand how it works, it's very useful!):</p>
@@ -3735,8 +3875,7 @@ memory usage: 32.8 KB
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>At this point you should split in train and test set and work only on the <strong>train!!</strong>. For simplicity we will not do this in the solutions.</p>
 </div>
@@ -3832,8 +3971,7 @@ memory usage: 32.8 KB
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>The number of feature variables (after converting categorical variables to dummy ones) is: 
 1 (age) + 1 (sex) + 3 (cp) + 1 (restbp) + 1 (chol) + 1 (fbs) + 2 (restecg) + 
@@ -3997,8 +4135,7 @@ Name: hd, dtype: float64</pre>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="Bonus:-Find-the-hidden-pattern">Bonus: Find the hidden pattern<a class="anchor-link" href="#Bonus:-Find-the-hidden-pattern">¶</a></h2><p>Read the following file into a <code>pandas</code> Dataframe: '../data/mystery.csv' and plot it.  How does it look? You should see a beautiful pattern. If not, think of ways to fix the issue.</p>
 </div>

@@ -108,9 +108,124 @@
 * IPython notebook
 *
 */
-/* CSS font colors for translated ANSI colors. */
+/* CSS font colors for translated ANSI escape sequences */
+/* The color values are a mix of
+   http://www.xcolors.net/dl/baskerville-ivorylight and
+   http://www.xcolors.net/dl/euphrasia */
+.ansi-black-fg {
+  color: #3E424D;
+}
+.ansi-black-bg {
+  background-color: #3E424D;
+}
+.ansi-black-intense-fg {
+  color: #282C36;
+}
+.ansi-black-intense-bg {
+  background-color: #282C36;
+}
+.ansi-red-fg {
+  color: #E75C58;
+}
+.ansi-red-bg {
+  background-color: #E75C58;
+}
+.ansi-red-intense-fg {
+  color: #B22B31;
+}
+.ansi-red-intense-bg {
+  background-color: #B22B31;
+}
+.ansi-green-fg {
+  color: #00A250;
+}
+.ansi-green-bg {
+  background-color: #00A250;
+}
+.ansi-green-intense-fg {
+  color: #007427;
+}
+.ansi-green-intense-bg {
+  background-color: #007427;
+}
+.ansi-yellow-fg {
+  color: #DDB62B;
+}
+.ansi-yellow-bg {
+  background-color: #DDB62B;
+}
+.ansi-yellow-intense-fg {
+  color: #B27D12;
+}
+.ansi-yellow-intense-bg {
+  background-color: #B27D12;
+}
+.ansi-blue-fg {
+  color: #208FFB;
+}
+.ansi-blue-bg {
+  background-color: #208FFB;
+}
+.ansi-blue-intense-fg {
+  color: #0065CA;
+}
+.ansi-blue-intense-bg {
+  background-color: #0065CA;
+}
+.ansi-magenta-fg {
+  color: #D160C4;
+}
+.ansi-magenta-bg {
+  background-color: #D160C4;
+}
+.ansi-magenta-intense-fg {
+  color: #A03196;
+}
+.ansi-magenta-intense-bg {
+  background-color: #A03196;
+}
+.ansi-cyan-fg {
+  color: #60C6C8;
+}
+.ansi-cyan-bg {
+  background-color: #60C6C8;
+}
+.ansi-cyan-intense-fg {
+  color: #258F8F;
+}
+.ansi-cyan-intense-bg {
+  background-color: #258F8F;
+}
+.ansi-white-fg {
+  color: #C5C1B4;
+}
+.ansi-white-bg {
+  background-color: #C5C1B4;
+}
+.ansi-white-intense-fg {
+  color: #A1A6B2;
+}
+.ansi-white-intense-bg {
+  background-color: #A1A6B2;
+}
+.ansi-default-inverse-fg {
+  color: #FFFFFF;
+}
+.ansi-default-inverse-bg {
+  background-color: #000000;
+}
+.ansi-bold {
+  font-weight: bold;
+}
+.ansi-underline {
+  text-decoration: underline;
+}
+/* The following styles are deprecated an will be removed in a future version */
 .ansibold {
   font-weight: bold;
+}
+.ansi-inverse {
+  outline: 0.5px dotted;
 }
 /* use dark versions for foreground, to improve visibility */
 .ansiblack {
@@ -189,12 +304,20 @@ div.cell {
   /* This acts as a spacer between cells, that is outside the border */
   margin: 0px;
   outline: none;
-  border-left-width: 1px;
-  padding-left: 5px;
-  background: linear-gradient(to right, transparent -40px, transparent 1px, transparent 1px, transparent 100%);
+  position: relative;
+  overflow: visible;
+}
+div.cell:before {
+  position: absolute;
+  display: block;
+  top: -1px;
+  left: -1px;
+  width: 5px;
+  height: calc(100% +  2px);
+  content: '';
+  background: transparent;
 }
 div.cell.jupyter-soft-selected {
-  border-left-color: #90CAF9;
   border-left-color: #E3F2FD;
   border-left-width: 1px;
   padding-left: 5px;
@@ -207,27 +330,39 @@ div.cell.jupyter-soft-selected {
     border-color: transparent;
   }
 }
-div.cell.selected {
+div.cell.selected,
+div.cell.selected.jupyter-soft-selected {
   border-color: #ababab;
-  border-left-width: 0px;
-  padding-left: 6px;
-  background: linear-gradient(to right, #42A5F5 -40px, #42A5F5 5px, transparent 5px, transparent 100%);
+}
+div.cell.selected:before,
+div.cell.selected.jupyter-soft-selected:before {
+  position: absolute;
+  display: block;
+  top: -1px;
+  left: -1px;
+  width: 5px;
+  height: calc(100% +  2px);
+  content: '';
+  background: #42A5F5;
 }
 @media print {
-  div.cell.selected {
+  div.cell.selected,
+  div.cell.selected.jupyter-soft-selected {
     border-color: transparent;
   }
 }
-div.cell.selected.jupyter-soft-selected {
-  border-left-width: 0;
-  padding-left: 6px;
-  background: linear-gradient(to right, #42A5F5 -40px, #42A5F5 7px, #E3F2FD 7px, #E3F2FD 100%);
-}
 .edit_mode div.cell.selected {
   border-color: #66BB6A;
-  border-left-width: 0px;
-  padding-left: 6px;
-  background: linear-gradient(to right, #66BB6A -40px, #66BB6A 5px, transparent 5px, transparent 100%);
+}
+.edit_mode div.cell.selected:before {
+  position: absolute;
+  display: block;
+  top: -1px;
+  left: -1px;
+  width: 5px;
+  height: calc(100% +  2px);
+  content: '';
+  background: #66BB6A;
 }
 @media print {
   .edit_mode div.cell.selected {
@@ -423,7 +558,9 @@ div.input_area > div.highlight > pre {
 .CodeMirror-lines {
   /* In CM2, this used to be 0.4em, but in CM3 it went to 4px. We need the em value because */
   /* we have set a different line-height and want this to scale with that. */
-  padding: 0.4em;
+  /* Note that this should set vertical padding only, since CodeMirror assumes
+       that horizontal padding will be set on CodeMirror pre */
+  padding: 0.4em 0;
 }
 .CodeMirror-linenumber {
   padding: 0 8px 0 4px;
@@ -433,11 +570,24 @@ div.input_area > div.highlight > pre {
   border-top-left-radius: 2px;
 }
 .CodeMirror pre {
-  /* In CM3 this went to 4px from 0 in CM2. We need the 0 value because of how we size */
-  /* .CodeMirror-lines */
-  padding: 0;
+  /* In CM3 this went to 4px from 0 in CM2. This sets horizontal padding only,
+    use .CodeMirror-lines for vertical */
+  padding: 0 0.4em;
   border: 0;
   border-radius: 0;
+}
+.CodeMirror-cursor {
+  border-left: 1.4px solid black;
+}
+@media screen and (min-width: 2138px) and (max-width: 4319px) {
+  .CodeMirror-cursor {
+    border-left: 2px solid black;
+  }
+}
+@media screen and (min-width: 4320px) {
+  .CodeMirror-cursor {
+    border-left: 4px solid black;
+  }
 }
 /*
 
@@ -685,6 +835,9 @@ div.output_area img.unconfined,
 div.output_area svg.unconfined {
   max-width: none;
 }
+div.output_area .mglyph > img {
+  max-width: none;
+}
 /* This is needed to protect the pre formating from global settings such
    as that of bootstrap */
 .output {
@@ -723,7 +876,7 @@ div.output_area svg.unconfined {
 }
 div.output_area pre {
   margin: 0;
-  padding: 0;
+  padding: 1px 0 1px 0;
   border: 0;
   vertical-align: baseline;
   color: black;
@@ -845,6 +998,10 @@ div.output_unrecognized a:hover {
 .rendered_html h6:first-child {
   margin-top: 1em;
 }
+.rendered_html ul:not(.list-inline),
+.rendered_html ol:not(.list-inline) {
+  padding-left: 2em;
+}
 
 
 
@@ -861,16 +1018,24 @@ div.output_unrecognized a:hover {
 }
 
 
+
+
+
 .rendered_html pre,
+
 
 
 
 .rendered_html tr,
 .rendered_html th,
 
-.rendered_html td,
 
-
+.rendered_html tbody tr:nth-child(odd) {
+  background: #f5f5f5;
+}
+.rendered_html tbody tr:hover {
+  background: rgba(66, 165, 245, 0.2);
+}
 .rendered_html * + table {
   margin-top: 1em;
 }
@@ -886,6 +1051,11 @@ div.output_unrecognized a:hover {
 
 .rendered_html img.unconfined,
 
+
+.rendered_html * + .alert {
+  margin-top: 1em;
+}
+[dir="rtl"] 
 div.text_cell {
   /* Old browsers */
   display: -webkit-box;
@@ -936,8 +1106,15 @@ h6:hover .anchor-link {
   display: none;
 }
 .text_cell.rendered 
+.text_cell.rendered .rendered_html tr,
+.text_cell.rendered .rendered_html th,
+.text_cell.rendered 
 .text_cell.unrendered .text_cell_render {
   display: none;
+}
+.text_cell .dropzone .input_area {
+  border: 2px dashed #bababa;
+  margin: -1px;
 }
 .cm-header-1,
 .cm-header-2,
@@ -1076,8 +1253,7 @@ h6:hover .anchor-link {
 .ansi-bold { font-weight: bold; }
 </style>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h1><img src="https://raw.githubusercontent.com/Harvard-IACS/2018-CS109A/master/content/styles/iacs.png" style="float: left; padding-right: 10px; width: 45px"> CS-109A Introduction to Data Science</h1>
 <h2 id="Lab-6:-Logistic-Regression">Lab 6: Logistic Regression<a class="anchor-link" href="#Lab-6:-Logistic-Regression">¶</a></h2><p><strong>Harvard University</strong><br>
@@ -1174,8 +1350,7 @@ header {
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="Learning-Goals-(EDIT)">Learning Goals (EDIT)<a class="anchor-link" href="#Learning-Goals-(EDIT)">¶</a></h2><p>In this lab, we'll explore different models used to predict which of several labels applies to a new datapoint based on labels observed in the training data.</p>
 <p>By the end of this lab, you should:</p>
@@ -1227,8 +1402,7 @@ header {
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="Part-1:--The-AirBnB-NYC-2019-Dataset-+-EDA">Part 1:  The AirBnB NYC 2019 Dataset + EDA<a class="anchor-link" href="#Part-1:--The-AirBnB-NYC-2019-Dataset-+-EDA">¶</a></h2><p>The dataset contains information about AirBnB hosts in NYC from 2019. There are 49k unique hosts and 16 features for each:</p>
 <ul>
@@ -1261,8 +1435,7 @@ header {
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h3 id="Read-in-and-checking">Read-in and checking<a class="anchor-link" href="#Read-in-and-checking">¶</a></h3><p>We do the usual read-in and verification of the data:</p>
 </div>
@@ -1425,8 +1598,7 @@ header {
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h3 id="Building-the-training/dev/testing-data">Building the training/dev/testing data<a class="anchor-link" href="#Building-the-training/dev/testing-data">¶</a></h3><p>As usual, we split the data before we begin our analysis. It would be unfair to cheat by looking at the testing data. Let's divide the data into 60% training, 20% development (aka validation), 20% testing. However, before we split the data, let's make the simple transformation and converting the prices into a categories of being <em>affordable</em> or not.</p>
 </div>
@@ -2716,8 +2888,7 @@ header {
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><strong>NOTE:</strong> The <code>affordable</code> column now has a value of 1 whenever the price is < 150, and 0 otherwise.</p>
 <p>Also, the feature named <code>neighbourhood_group</code> can be easily confused with <code>neighbourhood</code>, so let's go ahead and rename it to <code>borough</code>, as that is more distinct:</p>
@@ -4008,8 +4179,7 @@ header {
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>Without looking at the full data yet, let's just ensure our prices are within valid ranges:</p>
 </div>
@@ -4045,8 +4215,7 @@ Name: price, dtype: float64</pre>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>Uh-oh. We see that <code>price</code> has a minimum value of \$0. I highly doubt any unit in NYC is free. These data instances are garbage, so let's go ahead and remove any instance that has a price of \\$0.</p>
 </div>
@@ -4078,8 +4247,7 @@ new training size: (48884, 17)
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>Now, let's split the data while ensuring that our test set has a fair distribution of affordable units, then further split our training set so as to create the development set:</p>
 </div>
@@ -4117,8 +4285,7 @@ test: 9777 => 0.20000409131822272
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>Let's remove the target value (i.e., <strong>affordable</strong>) from our current dataframes and create it as separate prediction dataframes.</p>
 </div>
@@ -4146,8 +4313,7 @@ test: 9777 => 0.20000409131822272
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>From now onwards, we will do EDA and cleaning based on the training set, <code>x_train</code>.</p>
 </div>
@@ -4191,8 +4357,7 @@ availability_365 : 0
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>Oh dear. It appears ~6k of the rows have missing values concerning the reviews. It seems impossible to impute the <code>last_review</code> feature with reasonable values, as this is very specific to each unit. At best, we could guess the date based on the <code>reviews_per_month</code>, but that feature is missing for the same rows. Further, it might be difficult to replace <code>reviews_per_month</code> with reasonable values -- sure, we could fill in values to be the median value, but that seems wrong to generalize so heavily, especially for over 20% of our data. Consequently, let's just ignore these two columns.</p>
 </div>
@@ -4212,8 +4377,7 @@ availability_365 : 0
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>Let's look at the summary statistics of the data:</p>
 </div>
@@ -4360,8 +4524,7 @@ availability_365 : 0
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>Next, we see that the <code>minimum_nights</code> feature has a maximum value of 1,250. That's almost 3.5 years, which is probably longer than the duration that most people rent an apartment. This seems anomalous and wrong. Let's discard it and other units that are outrageous. Well, what constitutes 'outrageous'? We see that the standard deviation for <code>minimum_nights</code> is 21.24. If we assume our distribution of values are normally distributed, then only using values that are within 2 standard deviations of the mean would yield us with ~95% of the original data. However, we have no reason to believe our data is actually normally distributed, especially since our mean is 7. To have a better idea of our actual values, let's plot it as a histogram.</p>
 </div>
@@ -4399,8 +4562,7 @@ availability_365 : 0
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>Yea, that instance was a strong outlier, and the host was being ridiculously greedy. That's a clever way to get out a multi-year lease. Notice that we are using log-scale. Clearly, a lot of our mass is from units less than 365 days. To get a better sense of that subset, let's re-plot only units with minumum_nights < 365 days.</p>
 </div>
@@ -4439,8 +4601,7 @@ availability_365 : 0
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>Ok, that doesn't look too bad, as most units require < 30 nights. It's surprising that some hosts list an unreasonable requirement for the minimum number of nights. There is a risk that any host that lists such an unreasonable value might also have other incorrect information. Personally, I think anything beyond 30 days could be suspicious. If we were to exclude any unit that requires more than 30 days, how many instances would we be ignoring?</p>
 </div>
@@ -4468,8 +4629,7 @@ availability_365 : 0
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>Alright, we'd be throwing away 436 out of our ~30k entries. That's roughly 1.5\% of our data. While we generally want to keep and use as much data as we can, I think this is an okay amount to discard, especially considering (1) we have a decently large amount of data remaining, and (2) the entries beyond a 30-day-min could be unrealiable.</p>
 </div>
@@ -4489,8 +4649,7 @@ availability_365 : 0
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>Notice that we only trimmed our training data, not our development or testing data. I am making this choice because in real scenarios, we would not know the nature of the testing data values. We pre-processed our data to ignore all data that has a price of $0, and to ignore certain columns (even if it's in the testing set), but that was fair because those columns proved to be obvious, bogus element of the dataset. However, it would be unfair to inspect the values of the training set and then to further trim the development and testing set accordingly, conditioned on certain data values.</p>
 <p>The remaining columns of our training data all have reasonable summary statistics. None of the min's or max's are cause for concern, and we have no reason to assert a certain distribution of values. Since all the feature values are within reasonable ranges, and there are no missing values (NaNs) remaining, we can confidently move foward. To recap, our remaining columns are now:</p>
@@ -4531,8 +4690,7 @@ availability_365 : 0
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>We don't have a terribly large number of features. This allows us to inspect every pairwise interaction. A scatterplot is great for this, as it provides us with a high-level picture of how every pair of features correlates. If any subplot of features depicts a linear relationship (i.e., a clear, concise path with mass concentrated together), then we can assume there exists some collinearity -- that the two features overlap in what they are capturing and that they are not independent from each other.</p>
 </div>
@@ -4561,8 +4719,7 @@ availability_365 : 0
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="Part-2:--Predicting-with-MLE">Part 2:  Predicting with MLE<a class="anchor-link" href="#Part-2:--Predicting-with-MLE">¶</a></h2><p>Maximum-likelihood estimation (MLE) is a very simple model which does not require <em>learning</em> any weight/coefficient parameters. Specifically, MLE selects the parameter value ($y$) that makes the observed data most probable, so as to maximize the likelihood function. This choice of $y$ is completely independent of $x$. That is, a MLE model returns the $y$-value that was probable in the data its seen.</p>
 <p><br></p>
@@ -4595,8 +4752,7 @@ availability_365 : 0
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="Part-3:--Predicting-with-Linear-Regression">Part 3:  Predicting with Linear Regression<a class="anchor-link" href="#Part-3:--Predicting-with-Linear-Regression">¶</a></h2><p>Now, let's actually use our features to make more informed predictions. Since our model needs to use numeric values, not textual ones, let's use <strong>ONLY</strong> the following features for our linear model:</p>
 <ul>
@@ -4634,8 +4790,7 @@ availability_365 : 0
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <div class="exercise"><b>Exercise 3:</b> For this exercise, perform multi-linear regression and evaluate it on the development set. Do not introduce any polynomial terms or any other new features. Any prediction that is >= 0.5 should be treated as being an 'affordable' prediction. Anything below 0.5 should be 'unaffordable'. What is your accuracy %? (). Is this what you expected? Is this reasonable, and if not, what do you think are the issues?</div>
 </div>
@@ -4819,8 +4974,7 @@ Test R^2 = 0.3
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <div class="exercise"><b>Exercise 4:</b> Akin to what you did in Homework 3, regularize your model via Ridge regression and Lasso regression. Specifically, report the model's accuracy on the development set (as you did in Exercise 2); do so while varying the alpha (aka lambda) parameter to be each of these values: [.001, .01, .05, .1, .5, 1, 5, 10, 50, 100, 500]). What is your best result?</div>
 </div>
@@ -4872,16 +5026,14 @@ Test R^2 = 0.3
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><strong>Note,</strong> we did not perform cross-validation, so perhaps our model could have performed even better, had we done so.</p>
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <div class="exercise"><b>Exercise 5:</b> Plot two histograms of the residuals from your best performing linear regression model (having trained on the training set, one plot should show the distribution of training set residuals and another plot for the distribution of development set residuals). Does this adhere to the assumptions of a linear model?</div>
 </div>
@@ -4942,16 +5094,14 @@ Test R^2 = 0.3
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>The above plots suggest that the training data is not too conducive to being modelled by a linear regression model, for the residuals seem to be bimodal -- there isn't a single normal distrubion of residual values. Also, just for fun, we plotted the errors/residuals from having evaluated on the unseen development set. Doing so would provide no information about the assumptions of linear model being appropriate for our training data (as the unseen data could be completely dissimiliar from anything we saw during training). Yet, we hope that the development set residuals would be minimal, and it's nice that the errors seem to follow a normal distrubtion -- although, there's some outliers that we perform badly on, but this can happen.</p>
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="Part-4:-Binary-Logistic-Regression">Part 4: Binary Logistic Regression<a class="anchor-link" href="#Part-4:-Binary-Logistic-Regression">¶</a></h2><p>Linear regression is usually a good baseline model, but since the outcome we're trying to predict only takes values 0 and 1 we'll want to use logistic regression instead of basic linear regression.</p>
 <p>We will use <code>sklearn</code> for now, but <code>statsmodels</code> also provides LogisticRegression, along with nifty features like confidence intervals.</p>
@@ -4971,8 +5121,7 @@ Test R^2 = 0.3
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>Next, let's instantiate a new LogisticRegression model:</p>
 </div>
@@ -4990,8 +5139,7 @@ Test R^2 = 0.3
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>Now, we can fit our model with just 1 line!</p>
 </div>
@@ -5031,16 +5179,14 @@ Test R^2 = 0.3
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <div class="exercise"><b>Exercise 6:</b> Using .predict(), make predictions on the development set </div>
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>See <a href="https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LogisticRegression.html">.predict()</a> documentation here. <strong>NOTE:</strong> regularization is applied by default. Especially pay attention to the following arguments/parameters:</p>
 <ul>
@@ -5150,8 +5296,7 @@ the coefficients align with our features: (9777, 12)
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>The results here should show that for this dataset, logistic regression offered effectively identical performance as linear regression. There are two main takeaways from this:</p>
 <ul>
@@ -5162,8 +5307,7 @@ the coefficients align with our features: (9777, 12)
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="Part-5-(The-Real-Challenge):-Multiclass-Classification">Part 5 (The Real Challenge): Multiclass Classification<a class="anchor-link" href="#Part-5-(The-Real-Challenge):-Multiclass-Classification">¶</a></h2><p>Before we move on, let's consider a more common use case of logistic regression: predicting not just a binary variable, but what level a categorical variable will take. Instead of breaking the price variable into two classes (affordable being true or false), we may care for more fine-level granularity.</p>
 <p>For this exercise, go back to the original <code>df</code> dataframe and construct 5 classes of pricing:</p>
@@ -5178,16 +5322,14 @@ the coefficients align with our features: (9777, 12)
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>The <code>cut</code> function obviously stores a lot of extra information for us. It's a very useful tool for discretizing an existing variable.</p>
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <div class="exercise"><b>Exercise 8:</b> After making the new categories, perform the same predictions as above. Compare your results. What improvements could we make? (not just w/ the parameters, but with possibly expanding and using other features from our original dataset!)</div>
 </div>
@@ -5589,8 +5731,7 @@ feature: room_type_Shared room ; coef: 4.686077440118879
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>Despite having 5 distinct price categories now, our performance isn't too bad! To increase performance further, we could first use cross-validation. Then, we could look at our original data and try to better use its features. For example, perhaps it would be useful to expand out our 'neighbourhood' feature into one-hot encodings? I imagine the fine-level, granular information of 'neighbourhood' correlates well with price. The only concern and question to ask ourselves is how much data do we have for each neighbourhood? (We'd aim to have plenty of representative data). Related, the longitude and latitude features provide fine-level information, but perhaps it's hard for the model to use it since the range is so small. If we were to scale the lat and long values to be between 0 and 1, it might allow for the model to better distinguish between the nuanced values.</p>
 <p>For this exercise, we uniformly care about each price level and prediction thereof. However, in some scenarios, our classification accuracy for some categories is much more important than others (e.g., predicting cancer or not). That is, our false negatives (misses) are way more serious and potentially deadly. For situations like this, it is better to error on the side of caution and allow for false positives (aka false alarms) moreso than false negatives (misses). To handle this, one could weight each class, and specify such during training/ fitting our model. As we learned in class, we can plot the performance as we vary the prediction threshold, while paying attention to how that affects the number of false negatives and false positives.</p>

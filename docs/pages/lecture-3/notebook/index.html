@@ -106,9 +106,124 @@
 * IPython notebook
 *
 */
-/* CSS font colors for translated ANSI colors. */
+/* CSS font colors for translated ANSI escape sequences */
+/* The color values are a mix of
+   http://www.xcolors.net/dl/baskerville-ivorylight and
+   http://www.xcolors.net/dl/euphrasia */
+.ansi-black-fg {
+  color: #3E424D;
+}
+.ansi-black-bg {
+  background-color: #3E424D;
+}
+.ansi-black-intense-fg {
+  color: #282C36;
+}
+.ansi-black-intense-bg {
+  background-color: #282C36;
+}
+.ansi-red-fg {
+  color: #E75C58;
+}
+.ansi-red-bg {
+  background-color: #E75C58;
+}
+.ansi-red-intense-fg {
+  color: #B22B31;
+}
+.ansi-red-intense-bg {
+  background-color: #B22B31;
+}
+.ansi-green-fg {
+  color: #00A250;
+}
+.ansi-green-bg {
+  background-color: #00A250;
+}
+.ansi-green-intense-fg {
+  color: #007427;
+}
+.ansi-green-intense-bg {
+  background-color: #007427;
+}
+.ansi-yellow-fg {
+  color: #DDB62B;
+}
+.ansi-yellow-bg {
+  background-color: #DDB62B;
+}
+.ansi-yellow-intense-fg {
+  color: #B27D12;
+}
+.ansi-yellow-intense-bg {
+  background-color: #B27D12;
+}
+.ansi-blue-fg {
+  color: #208FFB;
+}
+.ansi-blue-bg {
+  background-color: #208FFB;
+}
+.ansi-blue-intense-fg {
+  color: #0065CA;
+}
+.ansi-blue-intense-bg {
+  background-color: #0065CA;
+}
+.ansi-magenta-fg {
+  color: #D160C4;
+}
+.ansi-magenta-bg {
+  background-color: #D160C4;
+}
+.ansi-magenta-intense-fg {
+  color: #A03196;
+}
+.ansi-magenta-intense-bg {
+  background-color: #A03196;
+}
+.ansi-cyan-fg {
+  color: #60C6C8;
+}
+.ansi-cyan-bg {
+  background-color: #60C6C8;
+}
+.ansi-cyan-intense-fg {
+  color: #258F8F;
+}
+.ansi-cyan-intense-bg {
+  background-color: #258F8F;
+}
+.ansi-white-fg {
+  color: #C5C1B4;
+}
+.ansi-white-bg {
+  background-color: #C5C1B4;
+}
+.ansi-white-intense-fg {
+  color: #A1A6B2;
+}
+.ansi-white-intense-bg {
+  background-color: #A1A6B2;
+}
+.ansi-default-inverse-fg {
+  color: #FFFFFF;
+}
+.ansi-default-inverse-bg {
+  background-color: #000000;
+}
+.ansi-bold {
+  font-weight: bold;
+}
+.ansi-underline {
+  text-decoration: underline;
+}
+/* The following styles are deprecated an will be removed in a future version */
 .ansibold {
   font-weight: bold;
+}
+.ansi-inverse {
+  outline: 0.5px dotted;
 }
 /* use dark versions for foreground, to improve visibility */
 .ansiblack {
@@ -187,12 +302,20 @@ div.cell {
   /* This acts as a spacer between cells, that is outside the border */
   margin: 0px;
   outline: none;
-  border-left-width: 1px;
-  padding-left: 5px;
-  background: linear-gradient(to right, transparent -40px, transparent 1px, transparent 1px, transparent 100%);
+  position: relative;
+  overflow: visible;
+}
+div.cell:before {
+  position: absolute;
+  display: block;
+  top: -1px;
+  left: -1px;
+  width: 5px;
+  height: calc(100% +  2px);
+  content: '';
+  background: transparent;
 }
 div.cell.jupyter-soft-selected {
-  border-left-color: #90CAF9;
   border-left-color: #E3F2FD;
   border-left-width: 1px;
   padding-left: 5px;
@@ -205,27 +328,39 @@ div.cell.jupyter-soft-selected {
     border-color: transparent;
   }
 }
-div.cell.selected {
+div.cell.selected,
+div.cell.selected.jupyter-soft-selected {
   border-color: #ababab;
-  border-left-width: 0px;
-  padding-left: 6px;
-  background: linear-gradient(to right, #42A5F5 -40px, #42A5F5 5px, transparent 5px, transparent 100%);
+}
+div.cell.selected:before,
+div.cell.selected.jupyter-soft-selected:before {
+  position: absolute;
+  display: block;
+  top: -1px;
+  left: -1px;
+  width: 5px;
+  height: calc(100% +  2px);
+  content: '';
+  background: #42A5F5;
 }
 @media print {
-  div.cell.selected {
+  div.cell.selected,
+  div.cell.selected.jupyter-soft-selected {
     border-color: transparent;
   }
 }
-div.cell.selected.jupyter-soft-selected {
-  border-left-width: 0;
-  padding-left: 6px;
-  background: linear-gradient(to right, #42A5F5 -40px, #42A5F5 7px, #E3F2FD 7px, #E3F2FD 100%);
-}
 .edit_mode div.cell.selected {
   border-color: #66BB6A;
-  border-left-width: 0px;
-  padding-left: 6px;
-  background: linear-gradient(to right, #66BB6A -40px, #66BB6A 5px, transparent 5px, transparent 100%);
+}
+.edit_mode div.cell.selected:before {
+  position: absolute;
+  display: block;
+  top: -1px;
+  left: -1px;
+  width: 5px;
+  height: calc(100% +  2px);
+  content: '';
+  background: #66BB6A;
 }
 @media print {
   .edit_mode div.cell.selected {
@@ -421,7 +556,9 @@ div.input_area > div.highlight > pre {
 .CodeMirror-lines {
   /* In CM2, this used to be 0.4em, but in CM3 it went to 4px. We need the em value because */
   /* we have set a different line-height and want this to scale with that. */
-  padding: 0.4em;
+  /* Note that this should set vertical padding only, since CodeMirror assumes
+       that horizontal padding will be set on CodeMirror pre */
+  padding: 0.4em 0;
 }
 .CodeMirror-linenumber {
   padding: 0 8px 0 4px;
@@ -431,11 +568,24 @@ div.input_area > div.highlight > pre {
   border-top-left-radius: 2px;
 }
 .CodeMirror pre {
-  /* In CM3 this went to 4px from 0 in CM2. We need the 0 value because of how we size */
-  /* .CodeMirror-lines */
-  padding: 0;
+  /* In CM3 this went to 4px from 0 in CM2. This sets horizontal padding only,
+    use .CodeMirror-lines for vertical */
+  padding: 0 0.4em;
   border: 0;
   border-radius: 0;
+}
+.CodeMirror-cursor {
+  border-left: 1.4px solid black;
+}
+@media screen and (min-width: 2138px) and (max-width: 4319px) {
+  .CodeMirror-cursor {
+    border-left: 2px solid black;
+  }
+}
+@media screen and (min-width: 4320px) {
+  .CodeMirror-cursor {
+    border-left: 4px solid black;
+  }
 }
 /*
 
@@ -683,6 +833,9 @@ div.output_area img.unconfined,
 div.output_area svg.unconfined {
   max-width: none;
 }
+div.output_area .mglyph > img {
+  max-width: none;
+}
 /* This is needed to protect the pre formating from global settings such
    as that of bootstrap */
 .output {
@@ -721,7 +874,7 @@ div.output_area svg.unconfined {
 }
 div.output_area pre {
   margin: 0;
-  padding: 0;
+  padding: 1px 0 1px 0;
   border: 0;
   vertical-align: baseline;
   color: black;
@@ -843,6 +996,10 @@ div.output_unrecognized a:hover {
 .rendered_html h6:first-child {
   margin-top: 1em;
 }
+.rendered_html ul:not(.list-inline),
+.rendered_html ol:not(.list-inline) {
+  padding-left: 2em;
+}
 
 
 
@@ -859,16 +1016,24 @@ div.output_unrecognized a:hover {
 }
 
 
+
+
+
 .rendered_html pre,
+
 
 
 
 .rendered_html tr,
 .rendered_html th,
 
-.rendered_html td,
 
-
+.rendered_html tbody tr:nth-child(odd) {
+  background: #f5f5f5;
+}
+.rendered_html tbody tr:hover {
+  background: rgba(66, 165, 245, 0.2);
+}
 .rendered_html * + table {
   margin-top: 1em;
 }
@@ -884,6 +1049,11 @@ div.output_unrecognized a:hover {
 
 .rendered_html img.unconfined,
 
+
+.rendered_html * + .alert {
+  margin-top: 1em;
+}
+[dir="rtl"] 
 div.text_cell {
   /* Old browsers */
   display: -webkit-box;
@@ -934,8 +1104,15 @@ h6:hover .anchor-link {
   display: none;
 }
 .text_cell.rendered 
+.text_cell.rendered .rendered_html tr,
+.text_cell.rendered .rendered_html th,
+.text_cell.rendered 
 .text_cell.unrendered .text_cell_render {
   display: none;
+}
+.text_cell .dropzone .input_area {
+  border: 2px dashed #bababa;
+  margin: -1px;
 }
 .cm-header-1,
 .cm-header-2,
@@ -1074,8 +1251,7 @@ h6:hover .anchor-link {
 .ansi-bold { font-weight: bold; }
 </style>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h1><img src="https://github.com/Harvard-IACS/2018-CS109A/blob/master/content/styles/iacs.png?raw=true" style="float: left; padding-right: 10px; width: 45px"> CS109A Introduction to Data Science</h1>
 <h2 id="Lecture-3-(Pandas-+-Beautiful-Soup)">Lecture 3 (Pandas + Beautiful Soup)<a class="anchor-link" href="#Lecture-3-(Pandas-+-Beautiful-Soup)">¶</a></h2><p><strong>Harvard University</strong><br>
@@ -1169,8 +1345,7 @@ header {
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h1 id="Table-of-Contents">Table of Contents<a class="anchor-link" href="#Table-of-Contents">¶</a></h1><ol start="0">
 <li> Learning Goals </li>
@@ -1182,8 +1357,7 @@ header {
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="Learning-Goals">Learning Goals<a class="anchor-link" href="#Learning-Goals">¶</a></h2><p>This Jupyter notebook accompanies Lecture 3. By the end of this lecture, you should be able to:</p>
 <ul>
@@ -1202,8 +1376,7 @@ header {
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="Part-1:-Processing-Data-without-Pandas">Part 1: Processing Data without Pandas<a class="anchor-link" href="#Part-1:-Processing-Data-without-Pandas">¶</a></h2><p><code>../data/top50.csv</code> is a dataset found online (Kaggle.com) that contains information about the 50 most popular songs on Spotify in 2019.</p>
 <p>Each row represents a distinct song.
@@ -1248,8 +1421,7 @@ Popularity: The higher the value, the more popular the song is.</code></pre>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h3 id="Read-and-store-../data/top50.csv">Read and store <code>../data/top50.csv</code><a class="anchor-link" href="#Read-and-store-../data/top50.csv">¶</a></h3><p><strong>Q1:</strong> Read in the <code>../data/top50.csv</code> file and store all of its contents into any data structure(s) that make the most sense to you, keeping in mind that you'd want to easily access any row or column. What data structure(s) make the most sense to use?</p>
 </div>
@@ -1281,8 +1453,7 @@ Popularity: The higher the value, the more popular the song is.</code></pre>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><strong>Q2:</strong> Write code to print all songs (Artist and Track name) that are longer than 4 minutes (240 seconds):</p>
 </div>
@@ -1319,8 +1490,7 @@ Lunay - Soltera - Remix is 266 seconds long
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><strong>Q3:</strong> Write code to print the most popular song (or song(s) if there is a tie):</p>
 </div>
@@ -1346,8 +1516,7 @@ Lunay - Soltera - Remix is 266 seconds long
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><strong>Q4:</strong> Write code to print the songs (and their attributes), if we sorted by their popularity (highest scoring ones first).</p>
 </div>
@@ -1365,8 +1534,7 @@ Lunay - Soltera - Remix is 266 seconds long
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><strong>Q5:</strong> How could you check for null/empty entries? This is only 50 entries. Imagine if we had 500,000.</p>
 </div>
@@ -1387,8 +1555,7 @@ Lunay - Soltera - Remix is 266 seconds long
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>Often times, one dataset doesn't contain all of the information you are interested in -- in which case, you need to combine data from multiple files.</p>
 <p><strong>Q6:</strong> Imagine we had another table (i.e., .csv file) below. How could we combine its data with our already-existing <em>dataset</em>?</p>
@@ -1396,16 +1563,14 @@ Lunay - Soltera - Remix is 266 seconds long
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="Part-2:-Processing-Data-with-Pandas">Part 2: Processing Data <em>with</em> Pandas<a class="anchor-link" href="#Part-2:-Processing-Data-with-Pandas">¶</a></h2>
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><strong>Pandas</strong> is an <em>open-source</em> Python library designed for <strong>data analysis and processing.</strong> Being <em>open-sourced</em> means that anyone can contribute to it (don't worry, a team of people vett all official updates to the library). Pandas allows for high-performance, easy-to-use data structures. Namely, instead of using N-dimensional arrays like NumPy (which are extremely fast, though), Pandas provides a 2D-table object calleda <strong>DataFrame</strong>.</p>
 <p>As a very gross simplification: <strong>NumPy</strong> is great for performing math operations with matrices, whereas <strong>Pandas</strong> is excellent for wrangling, processing, and understanding 2D data like spreadsheets (2D data like spreadsheets is very common and great).</p>
@@ -1432,8 +1597,7 @@ Lunay - Soltera - Remix is 266 seconds long
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h3 id="Reading-in-the-data">Reading in the data<a class="anchor-link" href="#Reading-in-the-data">¶</a></h3><p>Pandas allows us to <a href="https://pandas.pydata.org/pandas-docs/stable/user_guide/io.html">read in various structured files</a> (e.g., .csv, .json, .html, etc) with just one line:</p>
 </div>
@@ -1453,16 +1617,14 @@ Lunay - Soltera - Remix is 266 seconds long
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h3 id="High-level-view-of-the-data">High-level view of the data<a class="anchor-link" href="#High-level-view-of-the-data">¶</a></h3>
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>We can view the data frame by simply printing it:</p>
 </div>
@@ -1480,8 +1642,7 @@ Lunay - Soltera - Remix is 266 seconds long
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>Instead of printing the entire dataframe (e.g., <code>print(top50)</code>), we can also inspect the file by looking at just the first N rows or last N rows.</p>
 </div>
@@ -1500,8 +1661,7 @@ Lunay - Soltera - Remix is 266 seconds long
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>That's cool, but we can't see all of the columns too well. To get a list of all columns:</p>
 </div>
@@ -1519,8 +1679,7 @@ Lunay - Soltera - Remix is 266 seconds long
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>Remember, Pandas is in Python, so you can write regular Python code with it. For example, if you want to know how many columns there are, you can use Python's <code>len()</code> function.</p>
 </div>
@@ -1538,8 +1697,7 @@ Lunay - Soltera - Remix is 266 seconds long
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>Fortunately, many of the features in our dataset are numeric. Conveniently, Pandas' <code>describe()</code> function calculates basic statistics for our columns. It's pretty amazing, as it allows us a very coarse-grain approach to understanding our data and checking for errors. That is, if we notice any summary statistics that are drastically different than what we deem reasonable, we should dive deeper and figure out why the values are what they are.</p>
 </div>
@@ -1557,8 +1715,7 @@ Lunay - Soltera - Remix is 266 seconds long
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>Notice, it calculated statistics only for the columns that are of numeric data types. What about the textual ones (e.g., Track name and Artist)? Pandas is smart enough to infer the data types. <strong>Don't forget to inspect the columns that are text-based though, as we need to ensure they are sound, too.</strong></p>
 <p>To view the data type of each column:</p>
@@ -1577,16 +1734,14 @@ Lunay - Soltera - Remix is 266 seconds long
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h3 id="Exploring-the-data">Exploring the data<a class="anchor-link" href="#Exploring-the-data">¶</a></h3>
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>I agree with Pandas' handling of the data. If any column contained floating point numbers, we would expect to see such here, too.</p>
 <p>Now that we've viewed our dataset at a high-level, let's actually use and explore it.</p>
@@ -1606,8 +1761,7 @@ Lunay - Soltera - Remix is 266 seconds long
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>We could have also used this syntax (identical results):</p>
 </div>
@@ -1625,8 +1779,7 @@ Lunay - Soltera - Remix is 266 seconds long
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>If we want just the highest or lowest <strong>value</strong> of a given column, we can use the functions <code>max()</code> and <code>min()</code>, respectively.</p>
 </div>
@@ -1655,8 +1808,7 @@ Lunay - Soltera - Remix is 266 seconds long
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>If we want the <strong>row index</strong> that corresponds to a column's max or min value, we can use <code>idxmax()</code> and <code>idxmin()</code>, respectively.</p>
 </div>
@@ -1685,8 +1837,7 @@ Lunay - Soltera - Remix is 266 seconds long
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>We can also add <code>conditional statements</code> (e.g., >, <, ==) for columns, which yields a boolean vector:</p>
 </div>
@@ -1704,8 +1855,7 @@ Lunay - Soltera - Remix is 266 seconds long
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>This is useful, as it allows us to process only the rows with the True values.</p>
 <p>The <strong><code>loc()</code></strong> function allows us to access data via labels:</p>
@@ -1759,8 +1909,7 @@ Lunay - Soltera - Remix is 266 seconds long
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>Note, this returns a <em>DataFrame</em>. Everything we've learned so far concerns how to use DataFrames, so we can tack on additional syntax to this command if we wish to do further processing.</p>
 <p>For example, if we want to index just select columns (e.g., ArtistName, TrackName, and Length) of this returned DataFrame:</p>
@@ -1779,8 +1928,7 @@ Lunay - Soltera - Remix is 266 seconds long
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>Note, the above solves our original <strong>Q2:</strong> <em>(Write code to print all songs (Artist and Track name) that are longer than 4 minutes (240 seconds))</em></p>
 <p><strong>Q3:</strong> Write code to print the most popular song (or song(s) if there is a tie):</p>
@@ -1801,8 +1949,7 @@ Lunay - Soltera - Remix is 266 seconds long
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>We can also sort our data by a single column! This pertains to our original Q4!</p>
 <p><strong>Q4:</strong> Write code to print the songs (and their attributes), if we sorted by their popularity (highest scoring ones first).</p>
@@ -1821,8 +1968,7 @@ Lunay - Soltera - Remix is 266 seconds long
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>While <code>.loc()</code> allows us to index based on passed-in labels, <code>.iloc()</code> allows us to <strong>access data based on 0-based indices.</strong></p>
 <p>The syntax is <code>.iloc[<row selection>, <column selection>]</code>, where <row selection=""> and <column selection=""> can be scalars, lists, or slices of indices.</column></row></p>
@@ -1863,8 +2009,7 @@ Lunay - Soltera - Remix is 266 seconds long
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h3 id="Inspecting/cleaning-the-data">Inspecting/cleaning the data<a class="anchor-link" href="#Inspecting/cleaning-the-data">¶</a></h3><p>As mentioned, it is imperative to ensure the data is sound to use:</p>
 <ol>
@@ -1909,8 +2054,7 @@ Lunay - Soltera - Remix is 266 seconds long
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>If we run this for all of our features/columns, we will see there are no nulls. Since this dataset is manageable in size, you can also just scroll through it and notice no nulls.</p>
 <p>This answers our original Q5:</p>
@@ -1935,8 +2079,7 @@ Lunay - Soltera - Remix is 266 seconds long
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>Since only one song seems obviously wrong, we can manually fix it. And it's worth noting such to ourselves and to whomever else would see our results or receive a copy of our data. If there were many more wrong values, we'd potentialy not fix them, as we'd explore other options.</p>
 <ol>
@@ -1962,8 +2105,7 @@ Lunay - Soltera - Remix is 266 seconds long
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><code>../data/spotify_aux.csv</code> contains the same 50 songs as <code>top50.csv</code>; however, it only contains 3 columns:</p>
 <ul>
@@ -1989,8 +2131,7 @@ Lunay - Soltera - Remix is 266 seconds long
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>Let's merge it with our <code>top50</code> DataFrame.</p>
 <p><code>.merge()</code> is a Pandas function that stitches together DataFrames by their columns.</p>
@@ -2012,8 +2153,7 @@ Lunay - Soltera - Remix is 266 seconds long
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>We see that all columns from both DataFrames have been added. That's nice, but having duplicate ArtistName and TrackName is unecessary. Since <code>merge()</code> uses DataFrames as the passed-in objects, we can simply pass merge() a stripped-down copy of <em>ExplicitLanguage</em>, which helps merge() not add any redundant fields.</p>
 </div>
@@ -2032,8 +2172,7 @@ Lunay - Soltera - Remix is 266 seconds long
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>This answers our original Q6:</p>
 <p><strong>Q6:</strong> Imagine we had another table (i.e., .csv file) below. How could we combine its data with our already-existing <em>dataset</em>?</p>
@@ -2048,8 +2187,7 @@ Lunay - Soltera - Remix is 266 seconds long
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h3 id="Plotting-DataFrames">Plotting DataFrames<a class="anchor-link" href="#Plotting-DataFrames">¶</a></h3><p>As a very simple example of how one can plot elements of a DataFrame, we turn to Pandas' built-in plotting:</p>
 </div>
@@ -2078,8 +2216,7 @@ Lunay - Soltera - Remix is 266 seconds long
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>This shows the lack of a correlation between the Danceability of a song and its popularity, based on just the top 50 songs, of course.</p>
 <p>Please feel free to experiment with plotting other items of interest, and we recommend using Seaborn.</p>
@@ -2124,8 +2261,7 @@ Name: 21, dtype: object</pre>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><strong>P2.</strong> Print the 5 shortest songs (all features):</p>
 </div>
@@ -2144,8 +2280,7 @@ Name: 21, dtype: object</pre>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><strong>P3.</strong> What is the average length of the 5 shortest songs?</p>
 </div>
@@ -2164,8 +2299,7 @@ Name: 21, dtype: object</pre>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><strong>P4.</strong> Write a function that accepts a DataFrame as an input and returns True if there exists any null values in the DataSet. Otherwise, returns False. Pass <code>top50</code> to the function in order to test it.</p>
 </div>
@@ -2200,8 +2334,7 @@ Name: 21, dtype: object</pre>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><strong>P5.</strong> How many distinct genres are present in the top 50 songs?</p>
 </div>
@@ -2230,8 +2363,7 @@ Name: 21, dtype: object</pre>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><strong>P6.</strong> Print the songs that have a Danceability score above 80 and a popularity above 86. HINT: you can combine conditional statements with the & operator, and each item must be surrounded with ( ) brackets.</p>
 </div>
@@ -2365,8 +2497,7 @@ Name: 21, dtype: object</pre>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><strong>P7.</strong> Print the songs that are faster than the average Top 50 and more popular than the average Top 50?</p>
 </div>
@@ -2655,8 +2786,7 @@ Name: 21, dtype: object</pre>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><strong>P8.</strong> Plot a histogram of the Genre counts (x-axis is the Genres, y-axis is the # of songs with that Genre)</p>
 </div>
@@ -2674,8 +2804,7 @@ Name: 21, dtype: object</pre>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><strong>P9. (open ended)</strong> Think of a <em>subset</em> of the data that you're interested in. Think of an interesting plot that could be shown to illustrate that data. With a partner, discuss whose would be easier to create. Together, create that plot. Then, try to create the harder plot.</p>
 </div>

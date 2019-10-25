@@ -108,9 +108,124 @@
 * IPython notebook
 *
 */
-/* CSS font colors for translated ANSI colors. */
+/* CSS font colors for translated ANSI escape sequences */
+/* The color values are a mix of
+   http://www.xcolors.net/dl/baskerville-ivorylight and
+   http://www.xcolors.net/dl/euphrasia */
+.ansi-black-fg {
+  color: #3E424D;
+}
+.ansi-black-bg {
+  background-color: #3E424D;
+}
+.ansi-black-intense-fg {
+  color: #282C36;
+}
+.ansi-black-intense-bg {
+  background-color: #282C36;
+}
+.ansi-red-fg {
+  color: #E75C58;
+}
+.ansi-red-bg {
+  background-color: #E75C58;
+}
+.ansi-red-intense-fg {
+  color: #B22B31;
+}
+.ansi-red-intense-bg {
+  background-color: #B22B31;
+}
+.ansi-green-fg {
+  color: #00A250;
+}
+.ansi-green-bg {
+  background-color: #00A250;
+}
+.ansi-green-intense-fg {
+  color: #007427;
+}
+.ansi-green-intense-bg {
+  background-color: #007427;
+}
+.ansi-yellow-fg {
+  color: #DDB62B;
+}
+.ansi-yellow-bg {
+  background-color: #DDB62B;
+}
+.ansi-yellow-intense-fg {
+  color: #B27D12;
+}
+.ansi-yellow-intense-bg {
+  background-color: #B27D12;
+}
+.ansi-blue-fg {
+  color: #208FFB;
+}
+.ansi-blue-bg {
+  background-color: #208FFB;
+}
+.ansi-blue-intense-fg {
+  color: #0065CA;
+}
+.ansi-blue-intense-bg {
+  background-color: #0065CA;
+}
+.ansi-magenta-fg {
+  color: #D160C4;
+}
+.ansi-magenta-bg {
+  background-color: #D160C4;
+}
+.ansi-magenta-intense-fg {
+  color: #A03196;
+}
+.ansi-magenta-intense-bg {
+  background-color: #A03196;
+}
+.ansi-cyan-fg {
+  color: #60C6C8;
+}
+.ansi-cyan-bg {
+  background-color: #60C6C8;
+}
+.ansi-cyan-intense-fg {
+  color: #258F8F;
+}
+.ansi-cyan-intense-bg {
+  background-color: #258F8F;
+}
+.ansi-white-fg {
+  color: #C5C1B4;
+}
+.ansi-white-bg {
+  background-color: #C5C1B4;
+}
+.ansi-white-intense-fg {
+  color: #A1A6B2;
+}
+.ansi-white-intense-bg {
+  background-color: #A1A6B2;
+}
+.ansi-default-inverse-fg {
+  color: #FFFFFF;
+}
+.ansi-default-inverse-bg {
+  background-color: #000000;
+}
+.ansi-bold {
+  font-weight: bold;
+}
+.ansi-underline {
+  text-decoration: underline;
+}
+/* The following styles are deprecated an will be removed in a future version */
 .ansibold {
   font-weight: bold;
+}
+.ansi-inverse {
+  outline: 0.5px dotted;
 }
 /* use dark versions for foreground, to improve visibility */
 .ansiblack {
@@ -189,12 +304,20 @@ div.cell {
   /* This acts as a spacer between cells, that is outside the border */
   margin: 0px;
   outline: none;
-  border-left-width: 1px;
-  padding-left: 5px;
-  background: linear-gradient(to right, transparent -40px, transparent 1px, transparent 1px, transparent 100%);
+  position: relative;
+  overflow: visible;
+}
+div.cell:before {
+  position: absolute;
+  display: block;
+  top: -1px;
+  left: -1px;
+  width: 5px;
+  height: calc(100% +  2px);
+  content: '';
+  background: transparent;
 }
 div.cell.jupyter-soft-selected {
-  border-left-color: #90CAF9;
   border-left-color: #E3F2FD;
   border-left-width: 1px;
   padding-left: 5px;
@@ -207,27 +330,39 @@ div.cell.jupyter-soft-selected {
     border-color: transparent;
   }
 }
-div.cell.selected {
+div.cell.selected,
+div.cell.selected.jupyter-soft-selected {
   border-color: #ababab;
-  border-left-width: 0px;
-  padding-left: 6px;
-  background: linear-gradient(to right, #42A5F5 -40px, #42A5F5 5px, transparent 5px, transparent 100%);
+}
+div.cell.selected:before,
+div.cell.selected.jupyter-soft-selected:before {
+  position: absolute;
+  display: block;
+  top: -1px;
+  left: -1px;
+  width: 5px;
+  height: calc(100% +  2px);
+  content: '';
+  background: #42A5F5;
 }
 @media print {
-  div.cell.selected {
+  div.cell.selected,
+  div.cell.selected.jupyter-soft-selected {
     border-color: transparent;
   }
 }
-div.cell.selected.jupyter-soft-selected {
-  border-left-width: 0;
-  padding-left: 6px;
-  background: linear-gradient(to right, #42A5F5 -40px, #42A5F5 7px, #E3F2FD 7px, #E3F2FD 100%);
-}
 .edit_mode div.cell.selected {
   border-color: #66BB6A;
-  border-left-width: 0px;
-  padding-left: 6px;
-  background: linear-gradient(to right, #66BB6A -40px, #66BB6A 5px, transparent 5px, transparent 100%);
+}
+.edit_mode div.cell.selected:before {
+  position: absolute;
+  display: block;
+  top: -1px;
+  left: -1px;
+  width: 5px;
+  height: calc(100% +  2px);
+  content: '';
+  background: #66BB6A;
 }
 @media print {
   .edit_mode div.cell.selected {
@@ -423,7 +558,9 @@ div.input_area > div.highlight > pre {
 .CodeMirror-lines {
   /* In CM2, this used to be 0.4em, but in CM3 it went to 4px. We need the em value because */
   /* we have set a different line-height and want this to scale with that. */
-  padding: 0.4em;
+  /* Note that this should set vertical padding only, since CodeMirror assumes
+       that horizontal padding will be set on CodeMirror pre */
+  padding: 0.4em 0;
 }
 .CodeMirror-linenumber {
   padding: 0 8px 0 4px;
@@ -433,11 +570,24 @@ div.input_area > div.highlight > pre {
   border-top-left-radius: 2px;
 }
 .CodeMirror pre {
-  /* In CM3 this went to 4px from 0 in CM2. We need the 0 value because of how we size */
-  /* .CodeMirror-lines */
-  padding: 0;
+  /* In CM3 this went to 4px from 0 in CM2. This sets horizontal padding only,
+    use .CodeMirror-lines for vertical */
+  padding: 0 0.4em;
   border: 0;
   border-radius: 0;
+}
+.CodeMirror-cursor {
+  border-left: 1.4px solid black;
+}
+@media screen and (min-width: 2138px) and (max-width: 4319px) {
+  .CodeMirror-cursor {
+    border-left: 2px solid black;
+  }
+}
+@media screen and (min-width: 4320px) {
+  .CodeMirror-cursor {
+    border-left: 4px solid black;
+  }
 }
 /*
 
@@ -685,6 +835,9 @@ div.output_area img.unconfined,
 div.output_area svg.unconfined {
   max-width: none;
 }
+div.output_area .mglyph > img {
+  max-width: none;
+}
 /* This is needed to protect the pre formating from global settings such
    as that of bootstrap */
 .output {
@@ -723,7 +876,7 @@ div.output_area svg.unconfined {
 }
 div.output_area pre {
   margin: 0;
-  padding: 0;
+  padding: 1px 0 1px 0;
   border: 0;
   vertical-align: baseline;
   color: black;
@@ -845,6 +998,10 @@ div.output_unrecognized a:hover {
 .rendered_html h6:first-child {
   margin-top: 1em;
 }
+.rendered_html ul:not(.list-inline),
+.rendered_html ol:not(.list-inline) {
+  padding-left: 2em;
+}
 
 
 
@@ -861,16 +1018,24 @@ div.output_unrecognized a:hover {
 }
 
 
+
+
+
 .rendered_html pre,
+
 
 
 
 .rendered_html tr,
 .rendered_html th,
 
-.rendered_html td,
 
-
+.rendered_html tbody tr:nth-child(odd) {
+  background: #f5f5f5;
+}
+.rendered_html tbody tr:hover {
+  background: rgba(66, 165, 245, 0.2);
+}
 .rendered_html * + table {
   margin-top: 1em;
 }
@@ -886,6 +1051,11 @@ div.output_unrecognized a:hover {
 
 .rendered_html img.unconfined,
 
+
+.rendered_html * + .alert {
+  margin-top: 1em;
+}
+[dir="rtl"] 
 div.text_cell {
   /* Old browsers */
   display: -webkit-box;
@@ -936,8 +1106,15 @@ h6:hover .anchor-link {
   display: none;
 }
 .text_cell.rendered 
+.text_cell.rendered .rendered_html tr,
+.text_cell.rendered .rendered_html th,
+.text_cell.rendered 
 .text_cell.unrendered .text_cell_render {
   display: none;
+}
+.text_cell .dropzone .input_area {
+  border: 2px dashed #bababa;
+  margin: -1px;
 }
 .cm-header-1,
 .cm-header-2,
@@ -1076,8 +1253,7 @@ h6:hover .anchor-link {
 .ansi-bold { font-weight: bold; }
 </style>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h1><img src="https://raw.githubusercontent.com/Harvard-IACS/2018-CS109A/master/content/styles/iacs.png" style="float: left; padding-right: 10px; width: 45px"> CS-109A Introduction to Data Science</h1>
 <h2 id="Lab-6:-Logistic-Regression">Lab 6: Logistic Regression<a class="anchor-link" href="#Lab-6:-Logistic-Regression">¶</a></h2><p><strong>Harvard University</strong><br>
@@ -1174,8 +1350,7 @@ header {
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="Learning-Goals">Learning Goals<a class="anchor-link" href="#Learning-Goals">¶</a></h2><p>In this lab, we'll explore different models used to predict which of several labels applies to a new datapoint based on labels observed in the training data.</p>
 <p>By the end of this lab, you should:</p>
@@ -1213,8 +1388,7 @@ header {
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="Part-1:--The-Wine-Dataset">Part 1:  The Wine Dataset<a class="anchor-link" href="#Part-1:--The-Wine-Dataset">¶</a></h2><p>The dataset contains 11 chemical features of various wines, along with experts' rating of that wine's quality. The quality scale technically runs from 1-10, but only 3-9 are actually used in the data.</p>
 <p>Our goal will be to distinguish good wines from bad wines based on their chemical properties.</p>
@@ -1222,8 +1396,7 @@ header {
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h3 id="Read-in-and-checking">Read-in and checking<a class="anchor-link" href="#Read-in-and-checking">¶</a></h3><p>We do the usual read-in and verification of the data:</p>
 </div>
@@ -1569,8 +1742,7 @@ header {
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h3 id="Building-the-training/test-data">Building the training/test data<a class="anchor-link" href="#Building-the-training/test-data">¶</a></h3><p>As usual, we split the data before we begin our analysis.</p>
 <p>Today, we take the 'quality' variable as our target. There's a debate to be had about the best way to handle this variable. It has 10 categories (1-10), though only 3-9 are used. While the variable is definitely ordinal- we can put the categories in an order everyone agrees on- the variable probably isn't a simple numeric feature; it's not clear whether the gap between a 5 and a 6 wine is the same as the gap between an 8 and a 9.</p>
@@ -1718,8 +1890,7 @@ header {
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>Now that we've split, let's explore some patterns in the data</p>
 </div>
@@ -1750,16 +1921,14 @@ header {
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>It looks like there aren't any particularly strong correlations among the predictors (maybe sulfur dioxide and free sulfur dioxide) so we're safe to keep them all. It also looks like the different quality categories have roughly the same distribution of most variables, with volatile/fixed acidity and alcohol seeming like the most useful predictors.</p>
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="Part-2-(Introduction):-Binary-Logistic-Regression">Part 2 (Introduction): Binary Logistic Regression<a class="anchor-link" href="#Part-2-(Introduction):-Binary-Logistic-Regression">¶</a></h2><p>Linear regression is usually a good baseline model, but since the outcome we're trying to predict only takes values 0 and 1 we'll want to use logistic regression instead of basic linear regression.</p>
 <p>We'll begin with <code>statsmodels</code>, because <code>cs109</code> likes confidence intervals and checking that coefficients make sense.</p>
@@ -1869,8 +2038,7 @@ header {
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>Let's talk about the output:<br>
 First, "optimization terminated successfully". Recall that linear regression and its simple formula for the optimal betas is a rarity in machine learning and statistics: most models are fit to the data algorithmically, not via a formula. This message is letting us know that the algorithm seems to have worked.</p>
@@ -1894,8 +2062,7 @@ First, "optimization terminated successfully". Recall that linear regression and
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><div class="discussion"><b>Discussion</b></div></p>
 <ol>
@@ -1905,8 +2072,7 @@ First, "optimization terminated successfully". Recall that linear regression and
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h4 id="Prediction">Prediction<a class="anchor-link" href="#Prediction">¶</a></h4><p>One of the really cool features of logistic regression is that it hands back <em>probabilities</em> of a given case being 1 or 0, rather than just 1s and 0s. That lets us do neat things like set different cutoffs for what counts as a 1 and do ROC analysis and so on. Here, we'll just set the cutoff at 0.5: if a 1 is reported as more likely, predict a 1. (You can play with the cutoff yourself and see if you can make the model do better by trading false positives and false negatives).</p>
 <p>Because this is statsmodels, we'll need to import a tool or do the test set score calculation ourselves. Here, it's easy enough to implement:</p>
@@ -1941,16 +2107,14 @@ First, "optimization terminated successfully". Recall that linear regression and
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>Wow! 80% is a pretty good performance! We can pretty much tell the bad wines from the good.</p>
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>Here's a sanity check:</p>
 </div>
@@ -1978,8 +2142,7 @@ First, "optimization terminated successfully". Recall that linear regression and
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>Oh... no... wait. A model that says "all wines are bad" also scores 80% on the test set. Our fancy model isn't really doing that well.</p>
 <p><strong>Moral of the story</strong>: Before you congratulate a model, think of a <strong>truly</strong> trivial model to compare it to.</p>
@@ -1987,8 +2150,7 @@ First, "optimization terminated successfully". Recall that linear regression and
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <div class="exercise"><b>Exercise 1</b></div><ol>
 <li>Re-create the results above but this time work with <code>sklearn</code>.  Use the <code>LogisticRegression</code> class. Follow the usual <code>.fit</code>, <code>.score</code> procedure.  To match <code>statsmodel</code>'s coefficient values (roughly), you will need to adjust the input parameters:<ul>
@@ -2044,8 +2206,7 @@ dtype: float64
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><strong>Answer</strong>:</p>
 </div>
@@ -2105,8 +2266,7 @@ Test set score: 0.805
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>Speaker note: When presenting solution, model reading the documentation from the webpage. How does one know where to look?<br>
 Speaker note: Mention the wide variety of solvers and how (some) use different levels of derivatives to converge in fewer steps</p>
@@ -2114,8 +2274,7 @@ Speaker note: Mention the wide variety of solvers and how (some) use different l
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h4 id="The-Decision-Boundary">The Decision Boundary<a class="anchor-link" href="#The-Decision-Boundary">¶</a></h4><p>One powerful way to think about classification models is to consider where and how they draw the line between predicting "class A" and "class B". The code below lets you play with a 2d logistic regression. Points towards yellow will be predicted as 1s, points towards violet will be predicted as 0s.</p>
 </div>
@@ -2681,8 +2840,7 @@ NQAAAABJRU5ErkJggg==
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><div class="exercise"><b>Exercise 2</b></div></p>
 <ol>
@@ -2696,8 +2854,7 @@ NQAAAABJRU5ErkJggg==
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><strong>Answers</strong>:</p>
 <p><em>your answer here</em></p>
@@ -2722,8 +2879,7 @@ NQAAAABJRU5ErkJggg==
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="Part-3-(The-Real-Challenge):-Multiclass-Classification">Part 3 (The Real Challenge): Multiclass Classification<a class="anchor-link" href="#Part-3-(The-Real-Challenge):-Multiclass-Classification">¶</a></h2><p>Before we move on, let's consider a more common use case of logistic regression: predicting not just a binary variable, but what level a categorical variable will take. Instead of breaking the quality variable into 'good' and 'other', let's discretize into 'good, 'medium', and 'bad'.</p>
 </div>
@@ -2778,16 +2934,14 @@ Categories (3, int64): [0 < 1 < 2]
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>The <code>cut</code> function obviously stores a lot of extra information for us. It's a very useful tool for discretizing an existing variable.</p>
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><div class="exercise"><b>Exercise 3</b></div></p>
 <ol>
@@ -2799,8 +2953,7 @@ Categories (3, int64): [0 < 1 < 2]
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><strong>Answers</strong>:</p>
 <p>1.</p>
@@ -2859,8 +3012,7 @@ Intercepts:
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><em>your answer here</em></p>
 <p>1. We get three sets of coefficients, and three intercepts.</p>
@@ -2880,8 +3032,7 @@ Intercepts:
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>2.</p>
 </div>
@@ -2921,8 +3072,7 @@ Intercepts:
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><em>your answer here</em></p>
 <p>2. The model does pretty well at predicting the test data...</p>
@@ -2930,8 +3080,7 @@ Intercepts:
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>3.</p>
 </div>
@@ -2973,8 +3122,7 @@ Intercepts:
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><em>your solution here</em></p>
 <p>But, a trivial model that guesses the most likely class also does really well on the test set, too.</p>
@@ -2993,8 +3141,7 @@ Intercepts:
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h4 id="Summary">Summary<a class="anchor-link" href="#Summary">¶</a></h4><ul>
 <li>Logistic regression extends OLS to work naturally with a dependent variable that's only ever 0 and 1.</li>
@@ -3008,8 +3155,7 @@ Intercepts:
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="Part-4:-Dimensionality-Reduction">Part 4: Dimensionality Reduction<a class="anchor-link" href="#Part-4:-Dimensionality-Reduction">¶</a></h2><p>Our models are clearly struggling, but it's hard to tell why. Let's PCA to shrink the problem down to 2d (with as little loss as possible) and see if that gives us a clue about what makes this problem tough.</p>
 </div>
@@ -3063,8 +3209,7 @@ Intercepts:
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>Some comments:</p>
 <ol>
@@ -3451,16 +3596,14 @@ RVEAFQiKoihKBBUIiqIoCgD/P+bpiQMrfRclAAAAAElFTkSuQmCC
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>Well, that gives us some idea of why the problem is difficult: the good wines and bad wines are hiding right among the average wines. It does look like the wines separate into two groups, though, possibly one for reds and one for whites.</p>
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><div class="exercise"><b>Exercise 4</b></div></p>
 <ol>
@@ -3471,8 +3614,7 @@ RVEAFQiKoihKBBUIiqIoCgD/P+bpiQMrfRclAAAAAElFTkSuQmCC
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><strong>Answer</strong>:</p>
 <p><em>your answer here</em></p>
@@ -3495,8 +3637,7 @@ RVEAFQiKoihKBBUIiqIoCgD/P+bpiQMrfRclAAAAAElFTkSuQmCC
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><div class="exercise"><b>Exercise 5</b></div></p>
 <ol>
@@ -3506,8 +3647,7 @@ RVEAFQiKoihKBBUIiqIoCgD/P+bpiQMrfRclAAAAAElFTkSuQmCC
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><strong>Answer</strong>:</p>
 </div>
@@ -3809,8 +3949,7 @@ lCFkAAAAAElFTkSuQmCC
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="Evaluating-PCA----Variance-Explained">Evaluating PCA -  Variance Explained<a class="anchor-link" href="#Evaluating-PCA----Variance-Explained">¶</a></h2><p>One of the criticisms we made of the PCA plot was that it's lost something from the original data.</p>
 <p>Let's actually investigate how much of the original data's structure the 2d PCA captures. We'll look at the <code>explained_variance_ratio_</code> portion of the PCA fit. This lists, in order, the percentage of the x data's total variance that is captured by the nth PCA dimension.</p>
@@ -3843,16 +3982,14 @@ Total Variance Explained: 0.544591176215
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>The first PCA dimension captures 33% of the variance in the data, and the second PCA dimension adds another 20%. Together, we've got about half of the total variation in the training data covered with just these two dimensions.</p>
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><div class="exercise"><b>Exercise 6</b></div></p>
 <ol>
@@ -3866,8 +4003,7 @@ Total Variance Explained: 0.544591176215
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><strong>Answer</strong>:</p>
 </div>
@@ -3900,8 +4036,7 @@ Total Variance Explained: 0.544591176215
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>3.</p>
 <p><em>your answer here</em></p>
@@ -3921,8 +4056,7 @@ Total Variance Explained: 0.544591176215
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>4.</p>
 </div>
@@ -4124,8 +4258,7 @@ rkJggg==
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>A PCA dimension of 3, 4, or 5 looks good to me. These values are roughly where we hit diminishing returns on variance explained.</p>
 <p>Plots like the one above are called 'Scree' or 'Elbow' plots. They are often used to heuristically select a good number of PCA dimensions.</p>
@@ -4133,8 +4266,7 @@ rkJggg==
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h4 id="Summary">Summary<a class="anchor-link" href="#Summary">¶</a></h4><ul>
 <li>PCA maps a high-dimensional space into a lower dimensional space.</li>
@@ -4149,8 +4281,7 @@ rkJggg==
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="Part-5:-Did-we-fail?">Part 5: Did we fail?<a class="anchor-link" href="#Part-5:-Did-we-fail?">¶</a></h2><p>None of the models worked, and we can't tell good wines from bad. Was it all a waste of time and money?</p>
 <p>Not really. All analyses are a roll of the dice. Some analyses fail, like this one did, becuase the data at hand just don't support the task we've set out.</p>
@@ -4166,8 +4297,7 @@ rkJggg==
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h4 id="The-Moral-of-the-Lab">The Moral of the Lab<a class="anchor-link" href="#The-Moral-of-the-Lab">¶</a></h4><ul>
 <li>Sometimes, the data just aren't enough to adequately predict outcomes.</li>
@@ -4182,8 +4312,7 @@ rkJggg==
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="Part-6-(Sidebar):-Pipelines">Part 6 (Sidebar): Pipelines<a class="anchor-link" href="#Part-6-(Sidebar):-Pipelines">¶</a></h2><p>Remember when we were trying to adapt our LDA model to run on the training data with 'red' dropped? We had to invent new variable names and define functions and it was generally much harder than it needed to be. Pipelines are <code>sklearn</code>'s tool for packaging an entire analysis together into a single object. This enables convenient inspection, saving, deployment, and (yes) cross validation of the model.</p>
 <p>Let's look at an example (we'll switch the model to KNN to justify some later analysis).</p>
@@ -4232,8 +4361,7 @@ Test set score (updated parameters) 0.945
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>There's also a convenience function <code>make_pipeline</code> that lets us skip naming the different steps. Notice the default names are all-lowercase versions of the class names (standardscaler, pca, kneighborsclassifier)</p>
 </div>
@@ -4267,8 +4395,7 @@ Test set score (updated parameters) 0.945
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>It's easy to run the whole modelling process on new data:</p>
 </div>
@@ -4297,8 +4424,7 @@ Test set score (updated parameters) 0.945
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>As promised, cross validation tools work directly with the pipeline object.</p>
 </div>
@@ -4354,16 +4480,14 @@ Test set score (updated parameters) 0.945
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><strong>Note</strong>: In general, more PCA components will work better for prediction. However, KNN often performs worse as dimension increases, meaning there may be a meaningful balance point between capturing more variance and a space small enough for KNN to work well.</p>
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="Part-7-(Sidebar):-Weighting-the-training-points">Part 7 (Sidebar): Weighting the training points<a class="anchor-link" href="#Part-7-(Sidebar):-Weighting-the-training-points">¶</a></h2><p>Some models can accept weights on the training points to given them greater priority in the model's fitting process. This can be useful if, for instance, certain classes are rare but we want to be sure the model classifies them correctly (e.g. we're trying to classify cancers and one form is rare but very aggressive). In general, weighting training points is like moving along the ROC curve; we change some model parameters to alter the mistakes the model makes to be more in line with our tastes.</p>
 <p>Let's see this in action with a logistic regression:</p>
@@ -4424,16 +4548,14 @@ weighted:
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>Without weighting, the model plays it safe and predicts that all of the test set wines are medium. With weighting, the model is told to care more about getting the bad and good wines right. The model does as we've asked and correctly IDs 3 good/bad test wines, at the price of 17 falsely bad wines and 16 falsely good wines. However, if identifying bad and good wines is, as implied, 100 times more important than identifying medium wines, we've made a really good trade.</p>
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><div class="exercise"><b>Exercise 7</b></div></p>
 <ol>
@@ -4444,14 +4566,24 @@ weighted:
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
+</div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><strong>Answers</strong>:</p>
 <ol>
 <li>The model learns a classification rule that never predicts 'medium'. It's as it we dropped the medium wines from training.</li>
 <li>100, 1, 100 looks the best to me. We get a 1-in-8 sucess rate on the wines flagged as good. However, I found these values by looking at the test set confusion matrix; it's not clear they'd maintain the 1-in-8 ratio on new data.</li>
 </ol>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In [ ]:</div>
+<div class="inner_cell">
+<div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+</div>
 </div>
 </div>
 </div>
