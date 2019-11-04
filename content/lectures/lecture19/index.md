@@ -1,9 +1,26 @@
 Title: Lecture 19:
 Category: lectures
-Date: 2019-06-06
+Date: 2019-11-11
 Author: 
 Slug: lecture19
 Tages: ADD TAGS HERE
 
 
-## Slides
+## Lecture
+
+- [Lecture X: [pptx]
+
+
+## Section
+
+- [S-Section X: [Notebook]]
+
+
+## Advanced Section
+
+- [Advanced Section: [pptx]]
+
+
+## Lab
+
+- [Lab X: [Notebook]]

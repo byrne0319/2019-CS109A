@@ -1,9 +1,26 @@
 Title: Lecture 20:
 Category: lectures
-Date: 2019-06-06
+Date: 2019-11-13
 Author: 
 Slug: lecture20
 Tages: ADD TAGS HERE
 
 
-## Slides
+## Lecture
+
+- [Lecture X: [pptx]
+
+
+## Section
+
+- [S-Section X: [Notebook]]
+
+
+## Advanced Section
+
+- [Advanced Section: [pptx]]
+
+
+## Lab
+
+- [Lab X: [Notebook]]
