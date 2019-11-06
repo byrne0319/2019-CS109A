@@ -1,26 +1,15 @@
-Title: Lecture 17:
+Title: Lecture 17: Boosting
 Category: lectures
 Date: 2019-11-04
-Author: 
+Author: Pavlos Protopapas
 Slug: lecture17
-Tages: ADD TAGS HERE
+Tags: Boosting
 
 
 ## Lecture
 
-- [Lecture 17: [pptx]
-
-
-## Section
-
-- [S-Section X: [Notebook]]
-
-
-## Advanced Section
-
-- [Advanced Section: [pptx]]
-
+- [Lecture 16: Boosting [PPTX]]({attach}presentation/Lecture17_Boosting.pptx)
 
 ## Lab
 
-- [Lab X: [Notebook]]
+- Lab 10
